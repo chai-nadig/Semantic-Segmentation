@@ -201,8 +201,6 @@ def run():
 
         batch_size = 5
 
-        saver = tf.train.Saver()
-
         train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_loss, input_image,
                  correct_label, keep_prob, learning_rate)
 
@@ -211,6 +209,7 @@ def run():
         run_time = str(time.time())
         model_out_dir = os.path.join(models_dir, run_time)
         os.makedirs(model_out_dir)
+        saver = tf.train.Saver()
         saver.save(sess, os.path.join(model_out_dir, 'model'))
 
         # OPTIONAL: Apply the trained model to a video
