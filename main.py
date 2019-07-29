@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os.path
 import time
+from datetime import datetime
 
 import tensorflow as tf
 import helper
@@ -141,7 +142,7 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
     sess.run(tf.global_variables_initializer())
 
     for epoch in range(epochs):
-        print(str(time.time()) + ": starting epoch " + str(epoch + 1))
+        print(datetime.now().strftime("%m/%d/%Y, %H:%M:%S") + ": starting epoch " + str(epoch + 1))
 
         for image, label in get_batches_fn(batch_size):
             _, loss = sess.run([train_op, cross_entropy_loss],
@@ -152,7 +153,7 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
                                    learning_rate: 0.00001
                                })
 
-        print(str(time.time()) + ": finished epoch " + str(epoch + 1))
+        print(datetime.now().strftime("%m/%d/%Y, %H:%M:%S") + ": finished epoch " + str(epoch + 1))
 
 
 tests.test_train_nn(train_nn)
