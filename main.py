@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 import os.path
+import time
+
 import tensorflow as tf
 import helper
 import warnings
@@ -196,8 +198,12 @@ def run():
         train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_loss, input_image,
                  correct_label, keep_prob, learning_rate)
 
-        helper.save_inference_samples(models_dir, runs_dir, data_dir, sess, image_shape,
-                                      logits, keep_prob, input_image, saver)
+        helper.save_inference_samples(runs_dir, data_dir, sess, image_shape, logits, keep_prob, input_image)
+
+        run_time = str(time.time())
+        model_out_dir = os.path.join(models_dir, run_time)
+        os.makedirs(model_out_dir)
+        saver.save(sess, os.path.join(model_out_dir, 'model'))
 
         # OPTIONAL: Apply the trained model to a video
 
