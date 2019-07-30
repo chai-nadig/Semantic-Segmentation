@@ -63,33 +63,39 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
     """
     # Final output from VGG-16 - Fully connected to 1x1 convolutions
     conv_layer7 = tf.layers.conv2d(vgg_layer7_out, num_classes, 1, padding='same',
-                                   kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
+                                   kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3),
+                                   kernel_initializer=tf.truncated_normal_initializer(stddev=0.01))
 
     # Upsample the input to the original image size
     upsample_layer7 = tf.layers.conv2d_transpose(conv_layer7, num_classes, 4, 2, padding='same',
-                                                 kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
+                                                 kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3),
+                                                 kernel_initializer=tf.truncated_normal_initializer(stddev=0.01))
 
     # Skip layer - Pooling layer 4 in VGG-16 - Fully connected to 1x1 convolutions
     conv_layer4 = tf.layers.conv2d(vgg_layer4_out, num_classes, 1, padding='same',
-                                   kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
+                                   kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3),
+                                   kernel_initializer=tf.truncated_normal_initializer(stddev=0.01))
 
     # Add the skip layer to final output layer
     first_skip = tf.add(upsample_layer7, conv_layer4)
 
     # Upsample again
     upsample_first_skip = tf.layers.conv2d_transpose(first_skip, num_classes, 4, 2, padding='same',
-                                                     kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
+                                                     kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3),
+                                                     kernel_initializer=tf.truncated_normal_initializer(stddev=0.01))
 
     # Skip layer - Pooling layer 3 in VGG-16 - Fully connected to 1x1 convolutions
     conv_layer3 = tf.layers.conv2d(vgg_layer3_out, num_classes, 1, padding='same',
-                                   kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
+                                   kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3),
+                                   kernel_initializer=tf.truncated_normal_initializer(stddev=0.01))
 
     # Add the skip layer
     second_skip = tf.add(upsample_first_skip, conv_layer3)
 
     # Upsample again
     upsample_second_skip = tf.layers.conv2d_transpose(second_skip, num_classes, 16, 8, padding='same',
-                                                      kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
+                                                      kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3),
+                                                      kernel_initializer=tf.truncated_normal_initializer(stddev=0.01))
     return upsample_second_skip
 
 
@@ -197,7 +203,7 @@ def run():
 
         logits, train_op, cross_entropy_loss = optimize(layer_output, correct_label, learning_rate, num_classes)
 
-        epochs = 48
+        epochs = 25
 
         batch_size = 5
 
